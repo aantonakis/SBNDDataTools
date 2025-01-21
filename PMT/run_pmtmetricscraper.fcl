@@ -1,0 +1,40 @@
+#include "services_sbnd.fcl"
+#include "messages_sbnd.fcl"
+#include "pmtmetricscraper.fcl"
+
+process_name: PMTMetricScraper
+
+
+services:
+{
+
+  TFileService: {fileName: "pmtmetric_output.root"}
+
+  TimeTracker: {}
+  message: @local::sbnd_message_services
+
+  @table::sbnd_services
+
+}
+
+source:
+{
+
+  module_type: RootInput
+  maxEvents: -1
+
+}
+
+
+physics:
+{
+
+  analyzers:
+  {
+    ana: @local::pmtmetricscraper
+  }
+  path0: [ana]
+  end_paths: [path0]
+}
+
+
