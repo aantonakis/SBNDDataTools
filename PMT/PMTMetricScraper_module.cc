@@ -67,6 +67,7 @@ public:
 
   // Required functions.
   void analyze(art::Event const& e) override;
+  void beginJob() override;
 
 private:
 
@@ -127,9 +128,19 @@ void PMTMetricScraper::analyze(art::Event const& e)
     //
     art::Ptr<sbnd::trigger::pmtSoftwareTrigger> pmt_trig = pmtMetricVec[i];
 
-    std::cout << "peak time" << pmt_trig->peaktime << std::endl;
+    //std::cout << "peak time" << pmt_trig->peaktime << std::endl;
     //double peaktime;
-    fPMT_tree->Fill(fRun, fSubRun, fEventID, pmt_trig->peaktime);
+    fPMT_tree->Fill(fRun, 
+		    fSubRun, 
+		    fEventID, 
+		    pmt_trig->peaktime, 
+		    pmt_trig->trig_ts, 
+		    pmt_trig->peakPE,
+		    pmt_trig->promptPE,
+		    pmt_trig->prelimPE,
+		    pmt_trig->nAboveThreshold,
+		    pmt_trig->foundBeamTrigger
+		   );
 
   } // end of loop over pmt metric vector
 
@@ -139,8 +150,19 @@ void PMTMetricScraper::beginJob()
 {
   art::ServiceHandle<art::TFileService> tfs;
 
-  fPMT_tree = tfs->make<TTree>("pmt_metric_tree", "pmt_metric_tree", "run:subrun:evt:t"); 
+  fPMT_tree = tfs->make<TNtuple>("pmt_metric_tree", "pmt_metric_tree", "run:subrun:evt:t:ts:pe_peak:pe_prompt:pe_prelim:n:beamTrig"); 
+    
+/*
+    // All of the possible metrics
+    bool foundBeamTrigger; 
+    int nAboveThreshold;
+    int trig_ts;  // relative to beam window start, in ns
+    double promptPE;       // total PE for the 100 ns following trigger time 
+    double prelimPE;       // total PE for the 1 us before trigger time
+    double peakPE;
+    double peaktime;
 
+*/
 
 }
 

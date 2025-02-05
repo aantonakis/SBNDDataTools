@@ -1,0 +1,10 @@
+BEGIN_PROLOG 
+
+potscraper: 
+{
+    module_type: "POTScraper"
+    POTModuleLabel: "generator"
+
+}
+
+END_PROLOG

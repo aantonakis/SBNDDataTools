@@ -1,0 +1,41 @@
+#include "services_sbnd.fcl"
+#include "messages_sbnd.fcl"
+#include "simulationservices_sbnd.fcl"
+#include "potscraper.fcl"
+
+process_name: POTScraper
+
+
+services:
+{
+
+  TFileService: {fileName: "pot_output.root"}
+
+  TimeTracker: {}
+  message: @local::sbnd_message_services
+
+  @table::sbnd_services
+  @table::sbnd_simulation_services
+}
+
+source:
+{
+
+  module_type: RootInput
+  maxEvents: -1
+
+}
+
+
+physics:
+{
+
+  analyzers:
+  {
+    ana: @local::potscraper
+  }
+  path0: [ana]
+  end_paths: [path0]
+}
+
+
